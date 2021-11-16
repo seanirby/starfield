@@ -1,0 +1,87 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div>
+      <input type="range" id="min" name="min"
+             min="1" max="10" step=".1">
+      <label for="min">Minimum Star Radius</label>
+    </div>    
+    <div>
+      <input type="range" id="max" name="max"
+             min="1" max="10" step=".1">
+      <label for="max">Maximum Star Radius</label>
+    </div>    
+    <div>
+      <input type="range" id="number" name="number"
+             min="100" max="1000" step="1">
+      <label for="number">Number of Stars</label>
+    </div>
+    <div>
+      <button id="recalculate">Recalculate</button>
+    </div>
+    <svg id="svgContainer" viewBox="0 0 2025 900" xmlns="http://www.w3.org/2000/svg">
+      <rect fill="black" width="2025" height="900" stroke-width="0"/>
+    </svg>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>    
+    <script>
+      var CANVAS_WIDTH = 2025;
+      var CANVAS_HEIGHT = 900;
+      const BORDER_SIZE = 12.5;
+      const BOTTOM_PADDING = 100
+
+      function randomIntFromInterval(min, max) { // min and max included 
+	return Math.floor(Math.random() * (max - min + 1) + min)
+      }
+      
+
+      function reset() {
+	$("#svgContainer").empty();
+	const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+	rect.setAttribute("width", CANVAS_WIDTH);
+	rect.setAttribute("height", CANVAS_HEIGHT);
+	rect.setAttribute("fill", "black");
+	rect.setAttribute("stroke-width", 0);
+	document.getElementById("svgContainer").appendChild(rect);
+      }
+	
+
+      function drawCircle(r, x, y) {
+	const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+	circle.setAttribute("fill", "white");
+	circle.setAttribute("r", r);
+	circle.setAttribute("cx", x);
+	circle.setAttribute("cy", y);
+	document.getElementById("svgContainer").appendChild(circle);
+      }
+
+      function recalculate() {
+	reset();
+	const minRadius = parseFloat($("#min").val());
+	const maxRadius = parseFloat($("#max").val());
+	const numberOfStars = parseFloat($("#number").val());
+
+	
+	for (let i = 0; i < numberOfStars; i++) {
+	  const x = randomIntFromInterval(BORDER_SIZE, CANVAS_WIDTH-BORDER_SIZE);
+	  const y = randomIntFromInterval(BORDER_SIZE, CANVAS_HEIGHT-BORDER_SIZE-BOTTOM_PADDING);
+	  const r = randomIntFromInterval(minRadius, maxRadius);
+	  console.log(x, y, r, minRadius, maxRadius, numberOfStars);
+	  drawCircle(r, x, y);
+	}
+      }
+
+      $("#recalculate").click(recalculate)
+      
+
+      $(document).ready(() => {
+	reset()
+	drawCircle(4, 100, 100)
+      });
+    </script>
+  </body>
+</html>
+
