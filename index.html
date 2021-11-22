@@ -20,33 +20,63 @@
     <div>
       <button id="recalculate">Recalculate</button>
     </div>
+    <div id="imgContainer">
+    </div>
     <svg id="svgContainer" viewBox="0 0 2025 900" xmlns="http://www.w3.org/2000/svg">
       <rect fill="black" width="2025" height="900" stroke-width="0"/>
     </svg>
-    <div id="imgContainer">
-    </div>
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
       crossorigin="anonymous"></script>    
     <script>
       var CANVAS_WIDTH = 2025;
-      var CANVAS_HEIGHT = 900;
+      var CANVAS_HEIGHT = 850;
       const BORDER_SIZE = 12.5;
-      const BOTTOM_PADDING = 100;
+      const BOTTOM_PADDING = 121.9;
       const MOUNT_HOLE_X = 1970.2;
       const MOUNT_HOLE_Y = 536.7;
       const MOUNT_HOLE_DIAMETER = 35
 
+      function Circle(x, y, diameter) {
+	this.x = x;
+	this.y = y;
+	this.diameter = diameter;
+      }
+
+
+      const circles = [
+	//cue stick mount hole
+	new Circle(1970.2, CANVAS_HEIGHT - 313.3, 35),
+	//mount a
+	new Circle(25, 25, 25),
+	//mount b
+	new Circle(25, CANVAS_HEIGHT - (171.9), 25),
+	//mount c
+	new Circle(337.5, CANVAS_HEIGHT - 50, 25),
+	//mount d
+	new Circle(412.5, CANVAS_HEIGHT - 50, 25),
+	//mount e
+	new Circle(1612.5, CANVAS_HEIGHT - 50, 25),
+	//mount f
+	new Circle(1687.5, CANVAS_HEIGHT - 50, 25),
+	//mount g
+	new Circle(2000, CANVAS_HEIGHT - (171.9), 25),
+	//mount h
+	new Circle(2000, 25, 25),
+	new Circle(1892.8, CANVAS_HEIGHT - (286.1), 30)
+      ]
+
       function encodeAsImgAndLink(){
-       var svg = $("#svgContainer").html();
-       var b64 = btoa(svg);
+	var svg = $("#svgContainer").html();
+	var b64 = btoa(svg);
       
-       // Works in recent Webkit(Chrome)
-       $("#imgContainer").append($("<img src='data:image/svg+xml;base64,\n"+b64+"' alt='starfield.svg'/>"));
+	// Works in recent Webkit(Chrome)
+	$("#imgContainer").empty();
+	//$("#imgContainer").append($("<img src='data:image/svg+xml;base64,\n"+b64+"' alt='starfield.svg'/>"));
       
-       // Works in Firefox 3.6 and Webit and possibly any browser which supports the data-uri
-       $("imgContainer").append($("<a href-lang='image/svg+xml' href='data:image/svg+xml;base64,\n"+b64+"' title='file.svg'>Download</a>"));
+	// // Works in Firefox 3.6 and Webit and possibly any browser which supports the data-uri
+	 $("#imgContainer").append($("<a href-lang='image/svg+xml' href='data:image/svg+xml;base64,\n"+b64+"' title='file.svg'>Download</a>"));
       }
       
       function randomIntFromInterval(min, max) { // min and max included 
@@ -89,7 +119,12 @@
 	  drawCircle(r, x, y);
 	}
 
-	drawCircle(MOUNT_HOLE_DIAMETER/2, MOUNT_HOLE_X, MOUNT_HOLE_Y);
+	for (let j = 0; j < circles.length; j++) {
+	  const circle = circles[j]
+	  drawCircle(circle.diameter/2, circle.x, circle.y)
+	}
+
+	encodeAsImgAndLink();
       }
 
       $("#recalculate").click(recalculate)
